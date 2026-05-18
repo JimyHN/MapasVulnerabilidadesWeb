@@ -1,0 +1,225 @@
+{
+  "main": {
+    "id": "99c5d33cee207586",
+    "type": "split",
+    "children": [
+      {
+        "id": "8562bf36ddc2d409",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f4cff2015aa77bcd",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "Nueva pestaña"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "04be910e73643a56",
+    "type": "split",
+    "children": [
+      {
+        "id": "d53d7d609ae4845b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e6fe830310d9be98",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "byModifiedTimeReverse",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de archivos"
+            }
+          },
+          {
+            "id": "b4f38954f698d586",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#note",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "b2c23c0b6cabc8a1",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "a7940be03c219d05",
+    "type": "split",
+    "children": [
+      {
+        "id": "9e8c1016c94d4a6b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ac83714eaebec6a3",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Master/M2. Hacking Ético/◇🛡️ 3. Auditoría de infraestructuras II - Explotación y Escalada de privilegios.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes de ◇🛡️ 3. Auditoría de infraestructuras II - Explotación y Escalada de privilegios"
+            }
+          },
+          {
+            "id": "ccf03e85a1663f64",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "chmod.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes de chmod"
+            }
+          },
+          {
+            "id": "d7bd2a6f98bb0a76",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "962ff59b6f018333",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "chmod.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema de chmod"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "obsidian-git:Open Git source control": false,
+      "obsidian-excalidraw-plugin:Nuevo Bosquejo": false,
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Crear nueva base": false
+    }
+  },
+  "active": "e6fe830310d9be98",
+  "lastOpenFiles": [
+    "BurpSuite/NoSQL/💊🎨 NoSQL.canvas",
+    "BurpSuite/NoSQL/💊 NoSQL injection.md",
+    "BurpSuite/SQL injection/💉🎨 SQL injection.canvas",
+    "BurpSuite/NoSQL",
+    "BurpSuite/SQL injection/💉 SLQ injection.md",
+    "BurpSuite/File Upload/🗃️🎨 File Upload.canvas",
+    "BurpSuite/Path Trasversal/🛣️🎨 Path Trasversal.canvas",
+    "BurpSuite/SQL injection",
+    "BurpSuite/File Upload/🗃️ File Upload.md",
+    "BurpSuite/CSRF/🐼🎨 CSRF.canvas",
+    "BurpSuite/SSRF/🐻🎨 SSRF.canvas",
+    "BurpSuite/File Upload",
+    "BurpSuite/Broken Authentication/🦹‍♂️🎨 Broken Authentication.canvas",
+    "BurpSuite/SSRF/🐻 SSRF - Server-Site Request Forgery.md",
+    "BurpSuite/Broken Authentication/🦹‍♂️ Authentication.md",
+    "BurpSuite/CSRF/🐼 CSRF - Cross-Site Request Forgery.md",
+    "BurpSuite/SSRF",
+    "BurpSuite/CSRF",
+    "BurpSuite/👼 0. Introducción aprentise.md",
+    "BurpSuite/Path Trasversal/🛣️ Path Trasversal.md",
+    "BurpSuite/Broken Authentication",
+    "BurpSuite/Path Trasversal",
+    "Python/Python.md",
+    "Excalidraw/Drawing 2026-05-14 17.08.47.excalidraw.md",
+    "Excalidraw",
+    "Master/M7. Análisis Forense/Imagenes/fileu1.png",
+    "Master/M7. Análisis Forense/Imagenes/incomaand.png",
+    "Master/M2. Hacking Ético/📌 1. Introducción al Hacking Ético.md",
+    "Master/M2. Hacking Ético/◇💣 3.1 Metasploit.md",
+    "Hacking Ético/🐽 Google Dorks.md",
+    "Hacking Ético/🧑‍🚒 Sección 2 - Técnicas de evasión de Firewall.md",
+    "Hacking Ético/🎭 Sección 1 - Subnetting.md",
+    "Linux/LPI 010-060/🐉 Sección 4 - Redes.md",
+    "Linux/LPI 010-060/🦣 Sección 3 - SO Linux.md",
+    "Linux/LPI 010-060/Imágenes/Licencias.png",
+    "Master/M7. Análisis Forense/Imagenes/OSForensics.png",
+    "Master/M7. Análisis Forense/🦖 7. Gestión y análisis de logs de Windows.md",
+    "BurpSuite",
+    "Master/M3. Desarrollo Seguro/🦉 4. OWASP EXPLICACIÓN.md",
+    "Master/M3. Desarrollo Seguro/1️⃣0️⃣ 3. OWASP Top 10.md",
+    "Master/M3. Desarrollo Seguro/🚵 2. (SDLC) Ciclo de Vida de Desarrollo Seguro de Software.md",
+    "Master/M6. Seguridad Móvil/🐈 1. Introducción a la SPM.md",
+    "Master/M6. Seguridad Móvil/🛡️ 2. Seguridad en redes inalámbricas.md",
+    "Master/M5. Ingeniería Inversa/❌ 3. Reconstrucción de código I.md",
+    "Master/M5. Ingeniería Inversa/📠 2. Compiladores.md",
+    "Master/M7. Análisis Forense/Imagenes/LogsWindows1.png",
+    "Master/M7. Análisis Forense/Imagenes/FireEye.png",
+    "Master/M7. Análisis Forense/Imagenes/Snort1.png",
+    "Master/M7. Análisis Forense/Imagenes/Snort2.png",
+    "Master/M7. Análisis Forense/Imagenes/RegWin.png",
+    "Master/M7. Análisis Forense/Imagenes/clondiscoduroaotro2.png",
+    "Master/M7. Análisis Forense/Imagenes"
+  ]
+}

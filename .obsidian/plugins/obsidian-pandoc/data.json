@@ -1,0 +1,15 @@
+{
+  "showCLICommands": false,
+  "addExtensionsToInternalLinks": "html",
+  "injectAppCSS": "light",
+  "injectThemeCSS": false,
+  "customCSSFile": null,
+  "displayYAMLFrontmatter": false,
+  "linkStrippingBehaviour": "text",
+  "highDPIDiagrams": true,
+  "pandoc": "C:\\Users\\INTEL I5\\AppData\\Local\\Pandoc\\pandoc.exe",
+  "pdflatex": null,
+  "outputFolder": "C:\\Users\\INTEL I5\\Documents\\Jaime\\Profesional\\Ciber",
+  "extraArguments": "",
+  "exportFrom": "md"
+}

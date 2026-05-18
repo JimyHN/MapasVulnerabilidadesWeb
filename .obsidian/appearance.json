@@ -1,0 +1,12 @@
+{
+  "enabledCssSnippets": [
+    "centrado",
+    "tabla-centrada",
+    "estilo-canvas",
+    "canva-estilo",
+    "console",
+    "canva-style"
+  ],
+  "theme": "obsidian",
+  "cssTheme": ""
+}
