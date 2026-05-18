@@ -243,3 +243,33 @@ El **X-Forwarded** hace: Ese encabezado es la clave del ataque. Básicamente, le
 Si el servidor confía ciegamente en ese encabezado (lo cual hace este middleware vulnerable), enviará un correo a Carlos donde el botón de "Reset Password" no llevará a la web del laboratorio, sino a **tu** servidor.
 
 **`X-Forwarded-Host` (El que usamos antes)**: Se usa para engañar al servidor sobre su propio nombre. Le dijimos: _"Tú te llamas servidor-de-exploit.com"_. El servidor se lo creyó y generó un enlace de recuperación apuntando a tu servidor. **Fue un ataque de "Envenenamiento" (Poisoning).**
+
+# JWT Token (JSON Web Token)
+
+- Estándar abierto (RFC 7519) para transmitir información de forma segura entre partes
+- Compuesto por tres partes separadas por puntos: <b>Header.Payload.Signature</b>
+	- **Header:** Algoritmo de firma (HS256, RS256) y tipo de token
+	- **Payload:** Claims con datos del usuario (sub, name, role, exp, iat)
+	- **Signature:** Firma criptográfica que verifica la integridad del token
+- **Es stateless:** El servidor no necesita almacenar sesiones, todo está en el token
+
+# Formas de explotarlo
+## 1. Algoritmo None
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src="algnone.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src="algnone2.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
+</div>
+
+# 2. Cracking de secreto débil
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src="debilalg.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src="debilalg2.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
+</div>
