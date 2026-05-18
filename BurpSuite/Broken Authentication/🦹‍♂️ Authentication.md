@@ -270,6 +270,22 @@ Si el servidor confía ciegamente en ese encabezado (lo cual hace este middlewar
   <img src="debilalg.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
 </div>
 
+# 3. Key confusion
+
+Cuando un servidor usa RS256 verifica tokens con la clave publica RSA, pero si tambien acepta HS256 podemos aprovecharnos, hay que obtener la clave publica que siempre esta disponbible, lo firmamos con HS256 con la clave publica como secreto, cuándo el servidor lo reciba, si acepta HS256 usara la misma clave publica para la forma HMAC
+
 <div style="display: flex; justify-content: space-between; align-items: center;">
-  <img src="debilalg2.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
+  <img src="Keyconfusion.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
+</div>
+
+Flujo de ataque
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src="Keyconfusion2.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
+</div>
+
+# USAR HERRAMIENTA JWT_TOOL
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src="JWTHerramienta.png" alt="Imagen 1" style="width: 100%; border-radius: 8px;">
 </div>

@@ -171,14 +171,18 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "f4cff2015aa77bcd",
+  "active": "e6fe830310d9be98",
   "lastOpenFiles": [
-    "debilalg.png",
-    "algnone2.png",
+    "BurpSuite/Imagenes/JWTHerramienta.png",
+    "BurpSuite/Imagenes/Keyconfusion2.png",
+    "BurpSuite/Imagenes/algnone.png",
+    "BurpSuite/Broken Authentication/🦹‍♂️ Authentication.md",
+    "BurpSuite/Imagenes",
+    "BurpSuite/Imagenes/keyconfusion.png",
+    "BurpSuite/Imagenes/debilalg.png",
+    "BurpSuite/Imagenes/algnone2.png",
     "BurpSuite/Broken Authentication/🦹‍♂️🎨 Broken Authentication.canvas",
     "Master/M2. Hacking Ético/📌 1. Introducción al Hacking Ético.md",
-    "BurpSuite/Broken Authentication/🦹‍♂️ Authentication.md",
-    "algnone.png",
     "BurpSuite/NoSQL/💊🎨 NoSQL.canvas",
     "BurpSuite/NoSQL/💊 NoSQL injection.md",
     "BurpSuite/SQL injection/💉🎨 SQL injection.canvas",
@@ -221,10 +225,6 @@
     "Master/M6. Seguridad Móvil/🛡️ 2. Seguridad en redes inalámbricas.md",
     "Master/M5. Ingeniería Inversa/❌ 3. Reconstrucción de código I.md",
     "Master/M5. Ingeniería Inversa/📠 2. Compiladores.md",
-    "Master/M7. Análisis Forense/Imagenes/LogsWindows1.png",
-    "Master/M7. Análisis Forense/Imagenes/FireEye.png",
-    "Master/M7. Análisis Forense/Imagenes/Snort1.png",
-    "Master/M7. Análisis Forense/Imagenes/Snort2.png",
-    "Master/M7. Análisis Forense/Imagenes"
+    "Master/M7. Análisis Forense/Imagenes/LogsWindows1.png"
   ]
 }
