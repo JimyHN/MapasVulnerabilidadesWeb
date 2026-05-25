@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitácora ASVS 5.0 – V3</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'IBM Plex Sans', sans-serif; background: #060b14; color: #e2e8f0; font-size: 13px; }
+header { background: linear-gradient(135deg,#2d1b5e 0%,#1a2a4a 50%,#1a3a2a 100%); padding: 22px 28px 16px; border-bottom: 2px solid #2a1a4a; }
+header h1 { font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 600; color: #f1f5f9; letter-spacing: 0.05em; }
+header p { color: #64748b; font-size: 11px; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
+.toolbar { padding: 10px 20px; background: #0a111e; border-bottom: 1px solid #1a2535; display: flex; align-items: center; gap: 12px; }
+.btn-reset { background: #1e293b; color: #f87171; border: 1px solid #dc2626; border-radius: 6px; padding: 7px 18px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; }
+.btn-reset:hover { background: #2d1a1a; }
+.toolbar span { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #374151; }
+.wrap { padding: 16px; overflow-x: auto; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 32px rgba(0,0,0,0.5); }
+thead th { background: #040810; color: #4b5563; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; padding: 13px 12px; text-align: center; border-bottom: 2px solid #1a2535; white-space: nowrap; position: sticky; top: 0; z-index: 20; }
+thead th:first-child { border-radius: 10px 0 0 0; }
+thead th:last-child  { border-radius: 0 10px 0 0; }
+.chapter td { background: #2d1b5e; color: #e8d8ff; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 12px; padding: 10px 16px; text-align: center; letter-spacing: 0.06em; border-top: 3px solid #5530a0; }
+.section td { background: #5530a0; color: #e8d8ff; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; padding: 7px 16px; text-align: center; letter-spacing: 0.04em; }
+.data-row td { background: #160e30; padding: 12px 10px; border-bottom: 1px solid #2a1a4a; vertical-align: top; }
+.data-row:hover td { background: #1e1240; }
+.badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; border: 1px solid #5530a0; background: rgba(85,48,160,0.25); color: #c8a8f8; text-align: center; }
+.desc-cell { color: #94a3b8; font-size: 12px; line-height: 1.5; text-align: center; vertical-align: middle; }
+.status-sel { appearance: none; width: 100%; padding: 6px 24px 6px 10px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; cursor: pointer; text-align: center; }
+.stepper { border: 1px solid #2a1a4a; border-radius: 7px; overflow: hidden; }
+.st-header { background: #0a111e; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a1a4a; }
+.st-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; }
+.st-name { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #5530a0; }
+.st-body { padding: 12px 14px; min-height: 90px; background: #0f0a20; font-size: 12px; line-height: 1.6; color: #94a3b8; }
+.st-body strong { color: #e2e8f0; }
+.st-body code { background: #1e1240; padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #c8a8f8; }
+.st-footer { display: flex; justify-content: space-between; align-items: center; padding: 7px 12px; background: #0a111e; border-top: 1px solid #2a1a4a; }
+.st-btn { background: #1e1240; color: #94a3b8; border: 1px solid #3a2a5a; border-radius: 5px; padding: 4px 12px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; cursor: pointer; }
+.st-btn:hover:not(:disabled) { background: #2a1a4a; color: #e2e8f0; }
+.st-btn:disabled { opacity: 0.3; cursor: default; }
+.dots { display: flex; gap: 5px; align-items: center; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #3a2a5a; transition: background 0.2s, transform 0.2s; }
+.dot.active { background: #a855f7; transform: scale(1.4); }
+.aplica-si   { color: #4ade80; font-weight: 700; font-size: 11px; margin-bottom: 6px; }
+.aplica-no   { color: #f87171; font-weight: 700; font-size: 11px; margin-bottom: 6px; }
+.aplica-body { color: #94a3b8; font-size: 12px; line-height: 1.6; }
+.vt { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
+.vt th { background: #040810; color: #64748b; padding: 4px 8px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.vt td { padding: 5px 8px; border-top: 1px solid #2a1a4a; font-size: 11px; }
+.vt tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.ok   { color: #4ade80; font-weight: 700; }
+.fail { color: #f87171; font-weight: 700; }
+.warn { color: #fbbf24; font-weight: 700; }
+.na   { color: #94a3b8; font-weight: 700; }
+</style>
+</head>
+<body>
+<header>
+  <h1>// ASVS 5.0 — L1 &nbsp;·&nbsp; Bitácora Plantilla</h1>
+  <p>V3: Seguridad del Frontend Web</p>
+</header>
+<div class="toolbar">
+  <button class="btn-reset" onclick="resetAll()">⟳ Reset — todo a Pendiente</button>
+  <span>Restablece todos los estados al valor inicial</span>
+</div>
+<div class="wrap">
+<table>
+<thead>
+<tr>
+  <th style="width:90px">Requisito</th>
+  <th style="width:220px">Descripción</th>
+  <th style="width:130px">Estado</th>
+  <th style="width:220px">Cuándo aplica</th>
+  <th>Pasos para identificar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="chapter"><td colspan="5"><b>V3: Seguridad del Frontend Web</b></td></tr>
+<tr class="section"><td colspan="5">V3.2 · Interpretación No Intencionada de Contenido</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V3.2.1</span></td>
+  <td class="desc-cell">Verificar que existen controles para evitar que los navegadores representen contenido en un contexto incorrecto (X-Content-Type-Options, Content-Type correcto).</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-321" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-321">
+  <div class="st-header">
+    <span class="st-title" id="ap-321-title">Hoja 1 de 2</span>
+    <span class="st-name">V3.2.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-321-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-321')" id="ap-321-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-321-dot-0"></div><div class="dot" id="ap-321-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-321')" id="ap-321-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-321">
+  <div class="st-header">
+    <span class="st-title" id="st-321-title">Hoja 1 de 3</span>
+    <span class="st-name">V3.2.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-321-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-321')" id="st-321-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-321-dot-0"></div><div class="dot" id="st-321-dot-1"></div><div class="dot" id="st-321-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-321')" id="st-321-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V3.2.2</span></td>
+  <td class="desc-cell">Verificar que el contenido de texto se gestiona con funciones de renderizado seguras (createTextNode, textContent) para evitar ejecución no intencionada como HTML.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-322" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-322">
+  <div class="st-header">
+    <span class="st-title" id="ap-322-title">Hoja 1 de 2</span>
+    <span class="st-name">V3.2.2 aplica</span>
+  </div>
+  <div class="st-body" id="ap-322-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-322')" id="ap-322-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-322-dot-0"></div><div class="dot" id="ap-322-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-322')" id="ap-322-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-322">
+  <div class="st-header">
+    <span class="st-title" id="st-322-title">Hoja 1 de 3</span>
+    <span class="st-name">V3.2.2 pasos</span>
+  </div>
+  <div class="st-body" id="st-322-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-322')" id="st-322-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-322-dot-0"></div><div class="dot" id="st-322-dot-1"></div><div class="dot" id="st-322-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-322')" id="st-322-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="section"><td colspan="5">V3.3 · Configuración de Cookies</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V3.3.1</span></td>
+  <td class="desc-cell">Verificar que las cookies tienen el atributo Secure establecido y usan los prefijos __Host- o __Secure- según corresponda.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-331" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-331">
+  <div class="st-header">
+    <span class="st-title" id="ap-331-title">Hoja 1 de 2</span>
+    <span class="st-name">V3.3.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-331-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-331')" id="ap-331-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-331-dot-0"></div><div class="dot" id="ap-331-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-331')" id="ap-331-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-331">
+  <div class="st-header">
+    <span class="st-title" id="st-331-title">Hoja 1 de 3</span>
+    <span class="st-name">V3.3.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-331-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-331')" id="st-331-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-331-dot-0"></div><div class="dot" id="st-331-dot-1"></div><div class="dot" id="st-331-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-331')" id="st-331-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="section"><td colspan="5">V3.4 · Cabeceras de Seguridad del Navegador</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V3.4.1</span></td>
+  <td class="desc-cell">Verificar que se incluye Strict-Transport-Security (HSTS) en todas las respuestas con max-age de al menos 1 año.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-341" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-341">
+  <div class="st-header">
+    <span class="st-title" id="ap-341-title">Hoja 1 de 2</span>
+    <span class="st-name">V3.4.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-341-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-341')" id="ap-341-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-341-dot-0"></div><div class="dot" id="ap-341-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-341')" id="ap-341-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-341">
+  <div class="st-header">
+    <span class="st-title" id="st-341-title">Hoja 1 de 3</span>
+    <span class="st-name">V3.4.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-341-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-341')" id="st-341-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-341-dot-0"></div><div class="dot" id="st-341-dot-1"></div><div class="dot" id="st-341-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-341')" id="st-341-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V3.4.2</span></td>
+  <td class="desc-cell">Verificar que el CORS usa un valor fijo en Access-Control-Allow-Origin o valida contra una lista de orígenes de confianza.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-342" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-342">
+  <div class="st-header">
+    <span class="st-title" id="ap-342-title">Hoja 1 de 2</span>
+    <span class="st-name">V3.4.2 aplica</span>
+  </div>
+  <div class="st-body" id="ap-342-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-342')" id="ap-342-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-342-dot-0"></div><div class="dot" id="ap-342-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-342')" id="ap-342-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-342">
+  <div class="st-header">
+    <span class="st-title" id="st-342-title">Hoja 1 de 3</span>
+    <span class="st-name">V3.4.2 pasos</span>
+  </div>
+  <div class="st-body" id="st-342-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-342')" id="st-342-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-342-dot-0"></div><div class="dot" id="st-342-dot-1"></div><div class="dot" id="st-342-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-342')" id="st-342-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="section"><td colspan="5">V3.5 · Separación de Origen del Navegador</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V3.5.1</span></td>
+  <td class="desc-cell">Verificar que si la app no usa preflight CORS como protección, las peticiones sensibles se validan con tokens anti-CSRF o cabeceras adicionales no enviadas automáticamente por el navegador.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-351" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-351">
+  <div class="st-header">
+    <span class="st-title" id="ap-351-title">Hoja 1 de 2</span>
+    <span class="st-name">V3.5.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-351-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-351')" id="ap-351-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-351-dot-0"></div><div class="dot" id="ap-351-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-351')" id="ap-351-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-351">
+  <div class="st-header">
+    <span class="st-title" id="st-351-title">Hoja 1 de 3</span>
+    <span class="st-name">V3.5.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-351-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-351')" id="st-351-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-351-dot-0"></div><div class="dot" id="st-351-dot-1"></div><div class="dot" id="st-351-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-351')" id="st-351-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V3.5.2</span></td>
+  <td class="desc-cell">Verificar que si la app depende del preflight CORS, no acepta peticiones con Content-Type: text/plain que evitan el preflight.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-352" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-352">
+  <div class="st-header">
+    <span class="st-title" id="ap-352-title">Hoja 1 de 2</span>
+    <span class="st-name">V3.5.2 aplica</span>
+  </div>
+  <div class="st-body" id="ap-352-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-352')" id="ap-352-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-352-dot-0"></div><div class="dot" id="ap-352-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-352')" id="ap-352-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-352">
+  <div class="st-header">
+    <span class="st-title" id="st-352-title">Hoja 1 de 3</span>
+    <span class="st-name">V3.5.2 pasos</span>
+  </div>
+  <div class="st-body" id="st-352-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-352')" id="st-352-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-352-dot-0"></div><div class="dot" id="st-352-dot-1"></div><div class="dot" id="st-352-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-352')" id="st-352-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V3.5.3</span></td>
+  <td class="desc-cell">Verificar que las peticiones a funcionalidades sensibles usan métodos HTTP apropiados (POST, PUT, DELETE) y no métodos seguros como GET.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-353" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-353">
+  <div class="st-header">
+    <span class="st-title" id="ap-353-title">Hoja 1 de 2</span>
+    <span class="st-name">V3.5.3 aplica</span>
+  </div>
+  <div class="st-body" id="ap-353-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-353')" id="ap-353-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-353-dot-0"></div><div class="dot" id="ap-353-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-353')" id="ap-353-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-353">
+  <div class="st-header">
+    <span class="st-title" id="st-353-title">Hoja 1 de 3</span>
+    <span class="st-name">V3.5.3 pasos</span>
+  </div>
+  <div class="st-body" id="st-353-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-353')" id="st-353-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-353-dot-0"></div><div class="dot" id="st-353-dot-1"></div><div class="dot" id="st-353-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-353')" id="st-353-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr></tbody></table></div>
+<script>
+const AD = {"ap-321": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene una API REST, endpoints que devuelven JSON, ficheros estáticos o cualquier recurso que el navegador puede solicitar directamente escribiendo la URL. El riesgo es que el navegador interprete esa respuesta en un contexto diferente al esperado: un JSON que se abre directamente en el navegador podría ser tratado como HTML si no hay cabeceras que lo impidan.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app no tiene ningún endpoint accesible directamente desde el navegador. En la práctica esto es muy raro — casi cualquier app web con una API tiene este check aplicable. Solo puede no aplicar si todos los recursos están completamente bloqueados detrás de autenticación y nunca se sirven directamente.</div>"], "ap-322": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene campos de texto cuyo contenido se muestra en el navegador. Si en algún punto se toma texto de la base de datos o del usuario y se pone en el DOM del navegador, hay que verificar que se usa <code>textContent</code> o <code>createTextNode</code> y no <code>innerHTML</code>. Aplica a cualquier campo de comentario, nombre, descripción, mensaje que se renderice en pantalla.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app no renderiza ningún dato del usuario en el navegador. Imposible en una app real con datos dinámicos. En la práctica este check aplica a cualquier app que muestre datos del usuario en pantalla.</div>"], "ap-331": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app usa cookies para mantener la sesión del usuario o para cualquier otro propósito. Si en Burp ves cabeceras <code>Set-Cookie</code> en las respuestas del servidor, este check aplica. Especialmente importante si la cookie contiene el token de sesión.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app no usa cookies en absoluto. Si toda la autenticación se basa únicamente en JWT en el header <code>Authorization</code> y el servidor nunca envía una cabecera <code>Set-Cookie</code>, no aplica. Verifica en Burp que no hay ninguna cabecera Set-Cookie en ninguna respuesta.</div>"], "ap-341": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app se sirve por HTTPS. Siempre aplica en cualquier app web que esté en producción con HTTPS. El check verifica que las respuestas del servidor incluyen la cabecera HSTS para forzar al navegador a usar siempre HTTPS y nunca degradar a HTTP.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app solo se sirve por HTTP sin TLS (por ejemplo, en un entorno de desarrollo local sin HTTPS). En producción esto sería por sí mismo una vulnerabilidad grave, así que en la práctica siempre aplica si es una app real.</div>"], "ap-342": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene una API que devuelve datos y esos datos podrían ser consumidos desde un origen diferente (otro dominio). Cualquier app con API REST tiene este check aplicable. El riesgo es que la configuración CORS permita que webs maliciosas accedan a los datos de los usuarios.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app no tiene ninguna API que se consuma desde el navegador, o está completamente en un entorno cerrado sin acceso desde otros orígenes. En la práctica casi siempre aplica.</div>"], "ap-351": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene endpoints que modifican datos (guardar, actualizar, borrar) y usa cookies de sesión o algún mecanismo que el navegador envía automáticamente. Si un atacante puede hacer que el navegador del usuario haga una petición a esos endpoints sin que el usuario lo sepa, hay riesgo de CSRF.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">Toda la autenticación se basa en JWT en el header <code>Authorization: Bearer</code> y el servidor exige ese header para cualquier operación sensible. El navegador no envía este header automáticamente en peticiones cross-origin, por lo que un ataque CSRF no funcionaría.</div>"], "ap-352": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app acepta peticiones con <code>Content-Type: application/json</code> y se apoya en el preflight CORS como mecanismo de protección contra peticiones de otros orígenes. El check verifica que no sea posible hacer la misma petición con <code>text/plain</code> o <code>application/x-www-form-urlencoded</code> para evitar el preflight.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app no depende del preflight CORS para protegerse. Si usa JWT obligatorio en todos los endpoints sensibles, el preflight no es la línea de defensa principal y este check tiene menos relevancia.</div>"], "ap-353": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene endpoints que realizan operaciones sensibles (guardar datos, borrar registros, modificar información). El check verifica que esas operaciones usan métodos HTTP como POST, PUT, PATCH o DELETE, y no GET. Usar GET para operaciones que modifican datos es un error de diseño que facilita ataques CSRF y otros.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app es de solo lectura y no tiene ningún endpoint que modifique datos. En la práctica cualquier app con formularios o acciones de usuario tiene este check aplicable.</div>"]};
+const PD = {"st-321": ["<strong>Paso 1 — Verifica las cabeceras de las respuestas de la API en Burp</strong><br><br>Con Burp activo, navega por la app con normalidad para generar tráfico. En <strong>Proxy → HTTP History</strong>, haz clic en varias respuestas de la API (busca peticiones a endpoints como <code>/api/...</code> o similares que devuelvan datos JSON).<br><br>En la pestaña <strong>Response</strong>, mira las cabeceras de respuesta y busca estas dos:<br>• <code>X-Content-Type-Options</code><br>• <code>Content-Type</code>", "<strong>Paso 2 — Comprueba que el Content-Type es correcto y que nosniff está presente</strong><br><br>Para cada respuesta que devuelva datos:<br>• <code>Content-Type</code> debe coincidir con el contenido real: si devuelve JSON, debe ser <code>application/json</code>. Si devuelve HTML, <code>text/html</code>.<br>• <code>X-Content-Type-Options: nosniff</code> debe estar presente. Esta cabecera impide que el navegador \"adivine\" el tipo de contenido si el Content-Type fuera incorrecto o estuviera ausente.", "<table class=\"vt\"><tr><th>Lo que ves en las cabeceras</th><th>Veredicto</th></tr><tr><td>Hay <code>X-Content-Type-Options: nosniff</code> y el <code>Content-Type</code> es correcto</td><td class=\"ok\">✅ Correcto</td></tr><tr><td>No hay <code>X-Content-Type-Options</code> en ninguna respuesta</td><td class=\"fail\">❌ Deficiente</td></tr><tr><td>El <code>Content-Type</code> no coincide con el contenido real (ej: devuelve JSON pero dice <code>text/html</code>)</td><td class=\"fail\">❌ Deficiente</td></tr></table>"], "st-322": ["<strong>⚠️ NO REALIZADO en esta sesión de auditoría</strong><br><br>Este check requiere revisar el código fuente del frontend para verificar que al insertar texto dinámico en el DOM se usa <code>textContent</code> o <code>createTextNode</code> en lugar de <code>innerHTML</code>.<br><br>Para probarlo sin acceso al código fuente: busca en la app campos donde el servidor devuelve texto que se muestra en pantalla (nombres, comentarios, descripciones) e intenta introducir HTML como <code>&lt;b&gt;negrita&lt;/b&gt;</code>.", "<strong>Paso 2 — Observa cómo se renderiza el texto</strong><br><br>Si introduces <code>&lt;b&gt;negrita&lt;/b&gt;</code> en un campo y se muestra como texto literal con los símbolos <code>&lt;</code> y <code>&gt;</code> visibles → el campo usa renderizado seguro.<br><br>Si se muestra como texto en <strong>negrita</strong> (el HTML fue interpretado) → el campo usa <code>innerHTML</code> o equivalente, lo que podría permitir inyección de JavaScript.", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>El texto HTML se muestra como texto plano literal, con los caracteres <code>&lt;</code> y <code>&gt;</code> visibles</td><td class=\"ok\">✅ Correcto — usa renderizado seguro</td></tr><tr><td>El texto HTML se renderiza (la negrita aparece como negrita real, el script se ejecuta)</td><td class=\"fail\">❌ Deficiente — posible uso de innerHTML</td></tr></table>"], "st-331": ["<strong>Paso 1 — Captura la cookie de sesión en Burp</strong><br><br>Con Burp activo, inicia sesión en la app. En <strong>Proxy → HTTP History</strong>, localiza la respuesta del login (suele ser una petición POST a <code>/login</code>, <code>/auth</code> o similar que devuelve un código 200 o 302).<br><br>En la pestaña <strong>Response</strong>, busca la cabecera <code>Set-Cookie</code>. Si no ves ninguna cabecera Set-Cookie en el login ni en ninguna otra respuesta, este check no aplica.", "<strong>Paso 2 — Lee los atributos de la cookie y verifica cada uno</strong><br><br>La línea de <code>Set-Cookie</code> tiene este aspecto:<br><code>SESSION=abc123; Path=/; HttpOnly; Secure; SameSite=Lax</code><br><br>Busca y anota si están presentes estos tres atributos:<br>• <code>Secure</code> → la cookie solo se envía por HTTPS, nunca por HTTP<br>• <code>HttpOnly</code> → JavaScript no puede leer la cookie, protege contra XSS<br>• <code>SameSite=Strict</code> o <code>SameSite=Lax</code> → protege contra CSRF", "<table class=\"vt\"><tr><th>Atributo</th><th>Correcto</th><th>Deficiente</th></tr><tr><td><code>Secure</code></td><td class=\"ok\">Presente ✅</td><td class=\"fail\">Ausente ❌</td></tr><tr><td><code>HttpOnly</code></td><td class=\"ok\">Presente ✅</td><td class=\"fail\">Ausente ❌ (JavaScript puede robar la cookie via XSS)</td></tr><tr><td><code>SameSite</code></td><td class=\"ok\"><code>Strict</code> o <code>Lax</code> ✅</td><td class=\"warn\">Ausente o <code>None</code> ⚠️ (riesgo CSRF)</td></tr><tr><td>No hay Set-Cookie</td><td class=\"na\">➖ No aplica</td><td></td></tr></table>"], "st-341": ["<strong>Paso 1 — Busca la cabecera HSTS en cualquier respuesta de Burp</strong><br><br>Con Burp activo, haz clic en cualquier respuesta del servidor en <strong>Proxy → HTTP History</strong>. En la pestaña <strong>Response</strong>, busca en las cabeceras de respuesta la cabecera:<br><code>Strict-Transport-Security</code><br><br>Si no aparece en ninguna respuesta, ya tienes el veredicto: Deficiente.", "<strong>Paso 2 — Verifica el valor de max-age</strong><br><br>Si la cabecera está presente, comprueba el valor de <code>max-age</code>. Este valor está en segundos y representa cuánto tiempo el navegador recordará que debe usar HTTPS para este dominio.<br><br>El mínimo requerido por el ASVS es <strong>31536000 segundos</strong>, que equivale exactamente a 1 año.<br><br>Un valor correcto se vería así:<br><code>Strict-Transport-Security: max-age=31536000</code><br>o incluyendo subdominios:<br><code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code>", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>Cabecera presente con <code>max-age</code> de 31536000 o mayor</td><td class=\"ok\">✅ Correcto</td></tr><tr><td>Cabecera presente pero <code>max-age</code> menor a 31536000</td><td class=\"fail\">❌ Deficiente — el periodo de protección es demasiado corto</td></tr><tr><td>Cabecera ausente en todas las respuestas</td><td class=\"fail\">❌ Deficiente — sin protección HSTS</td></tr></table>"], "st-342": ["<strong>Paso 1 — Envía una petición con Origin falso en Burp Repeater</strong><br><br>En <strong>Proxy → HTTP History</strong>, localiza cualquier petición autenticada a la API (un GET o POST que devuelva datos). Mándala al <strong>Repeater</strong> (clic derecho → Send to Repeater).<br><br>En el Repeater, añade o modifica la cabecera de la petición:<br><code>Origin: https://malicioso.com</code><br><br>Pulsa Send y mira la respuesta. Fíjate en las cabeceras de respuesta: ¿aparece <code>Access-Control-Allow-Origin</code>?", "<strong>Paso 2 — Interpreta la respuesta</strong><br><br>Hay tres posibles escenarios:<br><br><strong>Escenario A:</strong> La respuesta incluye <code>Access-Control-Allow-Origin: https://malicioso.com</code> → el servidor refleja cualquier origen que le mandes → vulnerabilidad grave.<br><br><strong>Escenario B:</strong> La respuesta incluye <code>Access-Control-Allow-Origin: https://tuapp.com</code> (el origen legítimo, no el que pusiste tú) → correcto, solo permite orígenes de confianza.<br><br><strong>Escenario C:</strong> La respuesta no incluye ninguna cabecera CORS → también correcto, el servidor no permite peticiones cross-origin.", "<table class=\"vt\"><tr><th>Lo que ves en la respuesta</th><th>Veredicto</th></tr><tr><td><code>Access-Control-Allow-Origin: https://malicioso.com</code> (refleja tu Origin)</td><td class=\"fail\">❌ Deficiente grave — cualquier web puede hacer peticiones a la API</td></tr><tr><td><code>Access-Control-Allow-Origin: *</code> junto a <code>Access-Control-Allow-Credentials: true</code></td><td class=\"fail\">❌ Deficiente grave — configuración inválida y peligrosa</td></tr><tr><td>Responde con el origen legítimo de la app o sin cabecera CORS</td><td class=\"ok\">✅ Correcto</td></tr></table>"], "st-351": ["<strong>Paso 1 — Busca si hay token CSRF en las peticiones POST</strong><br><br>En Burp, localiza una petición POST que modifique datos (guardar, actualizar, borrar). Mírala detenidamente en la pestaña <strong>Request</strong>:<br><br>¿Ves alguno de estos campos en el body o en las cabeceras?<br><code>csrf</code>, <code>_token</code>, <code>csrfToken</code>, <code>authenticity_token</code>, <code>X-CSRF-Token</code>, <code>X-Requested-With</code><br><br>Si hay token CSRF → el servidor debería validarlo. Si no hay → comprueba si usa JWT obligatorio.", "<strong>Paso 2 — Comprueba si el servidor exige JWT en el header Authorization</strong><br><br>Si no hay token CSRF, la protección alternativa es el JWT en <code>Authorization: Bearer</code>. El navegador no envía este header automáticamente en peticiones cross-origin, así que si el servidor lo exige, hay protección contra CSRF.<br><br>En el Repeater, elimina completamente la línea <code>Authorization: Bearer eyJ...</code> y envía la petición. ¿Qué responde el servidor?", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>Hay token CSRF presente y el servidor lo valida (devuelve error si lo quitas o cambias)</td><td class=\"ok\">✅ Correcto</td></tr><tr><td>No hay token CSRF pero el servidor exige JWT → responde 401 sin el header Authorization</td><td class=\"ok\">✅ Correcto — JWT actúa como protección equivalente</td></tr><tr><td>No hay token CSRF y el servidor acepta la petición sin JWT → responde 200</td><td class=\"fail\">❌ Deficiente grave — sin ninguna protección CSRF</td></tr></table>"], "st-352": ["<strong>Paso 1 — Cambia el Content-Type a text/plain en Burp Repeater</strong><br><br>En el Repeater, coge una petición POST a la API que normalmente va con <code>Content-Type: application/json</code>.<br><br>Cambia el header a:<br><code>Content-Type: text/plain</code><br><br>Envía la petición y observa si el servidor responde 200 o devuelve un error. Las peticiones con <code>text/plain</code> no generan un preflight CORS, por lo que si el servidor las acepta, el preflight no está protegiendo nada.", "<strong>Paso 2 — Si responde 200, comprueba también sin JWT</strong><br><br>Si el servidor acepta <code>text/plain</code> con 200, da un paso más: elimina también el header <code>Authorization: Bearer</code> y repite.<br><br>Esto determina si el endpoint es completamente abierto (sin autenticación ni protección de preflight) o si al menos el JWT sigue siendo necesario.", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>Rechaza <code>text/plain</code> con error (400, 415 Unsupported Media Type)</td><td class=\"ok\">✅ Correcto — el servidor valida el Content-Type</td></tr><tr><td>Acepta <code>text/plain</code> pero exige JWT válido</td><td class=\"warn\">⚠️ Riesgo bajo — el preflight no protege pero el JWT sí</td></tr><tr><td>Acepta <code>text/plain</code> sin JWT</td><td class=\"fail\">❌ Deficiente grave — endpoint completamente abierto sin preflight ni autenticación</td></tr></table>"], "st-353": ["<strong>⚠️ NO REALIZADO en esta sesión de auditoría</strong><br><br>Este check verifica que las operaciones sensibles (guardar, modificar, borrar) usan métodos HTTP adecuados (POST, PUT, PATCH, DELETE) y no el método GET.<br><br>Para comprobarlo: en <strong>Burp → Proxy → HTTP History</strong>, filtra por peticiones que modifiquen datos. Mira el método HTTP (columna Method) de cada una.", "<strong>Paso 2 — Verifica los métodos de los endpoints sensibles</strong><br><br>Navega por todas las acciones de la app que modifiquen datos: guardar un registro, actualizar, eliminar, enviar un formulario. Para cada una, en Burp anota qué método HTTP usa.<br><br>Si alguna operación destructiva o de escritura usa GET, prueba a ejecutarla directamente desde la barra de direcciones del navegador pegando la URL completa. Si funciona desde el navegador sin POST → el método es incorrecto.", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>Todas las operaciones de escritura y borrado usan POST, PUT, PATCH o DELETE</td><td class=\"ok\">✅ Correcto</td></tr><tr><td>Alguna operación que modifica datos usa GET</td><td class=\"fail\">❌ Deficiente — un enlace o imagen puede desencadenar la acción sin interacción del usuario</td></tr></table>"]};
+const SS = {};
+
+function initStepper(id, data) {
+  SS[id] = 0;
+  render(id, data);
+}
+
+function render(id, data) {
+  if (!data) return;
+  const idx = SS[id];
+  const total = data.length;
+  const b = document.getElementById(id + '-body');
+  const t = document.getElementById(id + '-title');
+  const p = document.getElementById(id + '-prev');
+  const n = document.getElementById(id + '-next');
+  if (!b) return;
+  b.innerHTML = data[idx];
+  t.textContent = 'Hoja ' + (idx + 1) + ' de ' + total;
+  p.disabled = (idx === 0);
+  n.disabled = (idx === total - 1);
+  for (let i = 0; i < total; i++) {
+    const d = document.getElementById(id + '-dot-' + i);
+    if (d) { d.className = 'dot' + (i === idx ? ' active' : ''); }
+  }
+}
+
+function sN(id) {
+  const data = AD[id] || PD[id];
+  if (!data) return;
+  if (SS[id] < data.length - 1) { SS[id]++; render(id, data); }
+}
+
+function sP(id) {
+  const data = AD[id] || PD[id];
+  if (!data) return;
+  if (SS[id] > 0) { SS[id]--; render(id, data); }
+}
+
+function updSel(sel) {
+  const m = {
+    pendiente: 'background:rgba(133,100,4,0.2);border-color:#ca8a04;color:#fde68a;',
+    correcto:  'background:rgba(21,128,61,0.2);border-color:#16a34a;color:#86efac;',
+    deficiente:'background:rgba(185,28,28,0.2);border-color:#dc2626;color:#fca5a5;',
+    noapl:     'background:rgba(55,65,81,0.2);border-color:#4b5563;color:#9ca3af;'
+  };
+  sel.style.cssText = m[sel.value] || '';
+}
+
+function resetAll() {
+  document.querySelectorAll('.status-sel').forEach(function(sel) {
+    sel.value = 'pendiente';
+    updSel(sel);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  Object.keys(AD).forEach(function(id) { initStepper(id, AD[id]); });
+  Object.keys(PD).forEach(function(id) { initStepper(id, PD[id]); });
+});
+</script>
+</body>
+</html>

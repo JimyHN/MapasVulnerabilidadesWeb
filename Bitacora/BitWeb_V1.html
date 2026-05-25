@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitácora ASVS 5.0 – V1</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'IBM Plex Sans', sans-serif; background: #060b14; color: #e2e8f0; font-size: 13px; }
+header { background: linear-gradient(135deg,#1e3a5f 0%,#3b1f5e 50%,#1a4731 100%); padding: 22px 28px 16px; border-bottom: 2px solid #1a2535; }
+header h1 { font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 600; color: #f1f5f9; letter-spacing: 0.05em; }
+header p { color: #64748b; font-size: 11px; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
+.toolbar { padding: 10px 20px; background: #0a111e; border-bottom: 1px solid #1a2535; display: flex; align-items: center; gap: 12px; }
+.btn-reset { background: #1e293b; color: #f87171; border: 1px solid #dc2626; border-radius: 6px; padding: 7px 18px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; }
+.btn-reset:hover { background: #2d1a1a; }
+.toolbar span { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #374151; }
+.wrap { padding: 16px; overflow-x: auto; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 32px rgba(0,0,0,0.5); }
+thead th { background: #040810; color: #4b5563; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; padding: 13px 12px; text-align: center; border-bottom: 2px solid #1a2535; white-space: nowrap; position: sticky; top: 0; z-index: 20; }
+thead th:first-child { border-radius: 10px 0 0 0; }
+thead th:last-child  { border-radius: 0 10px 0 0; }
+.chapter td { background: #1e3a5f; color: #e0f0ff; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 12px; padding: 10px 16px; text-align: center; letter-spacing: 0.06em; border-top: 3px solid #2d6a9f; }
+.section td { background: #2d6a9f; color: #e0f0ff; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; padding: 7px 16px; text-align: center; letter-spacing: 0.04em; }
+.data-row td { background: #0d1e35; padding: 12px 10px; border-bottom: 1px solid #1a2535; vertical-align: top; }
+.data-row:hover td { background: #122840; }
+.badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; border: 1px solid #2d6a9f; background: rgba(45,106,159,0.25); color: #90c4f0; text-align: center; }
+.status-sel { appearance: none; width: 100%; padding: 6px 24px 6px 10px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; cursor: pointer; text-align: center; }
+.stepper { border: 1px solid #2a3550; border-radius: 7px; overflow: hidden; }
+.st-header { background: #0a111e; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a2535; }
+.st-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; }
+.st-name { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #3d4f6a; }
+.st-body { padding: 12px 14px; min-height: 90px; background: #111827; font-size: 12px; line-height: 1.6; color: #94a3b8; }
+.st-body strong { color: #e2e8f0; }
+.st-body code { background: #1e293b; padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #7dd3fc; }
+.st-footer { display: flex; justify-content: space-between; align-items: center; padding: 7px 12px; background: #0a111e; border-top: 1px solid #1a2535; }
+.st-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; border-radius: 5px; padding: 4px 12px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; cursor: pointer; }
+.st-btn:hover:not(:disabled) { background: #2d3a4f; color: #e2e8f0; }
+.st-btn:disabled { opacity: 0.3; cursor: default; }
+.dots { display: flex; gap: 5px; align-items: center; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #334155; transition: background 0.2s, transform 0.2s; }
+.dot.active { background: #6366f1; transform: scale(1.4); }
+.aplica-si  { color: #4ade80; font-weight: 700; font-size: 11px; margin-bottom: 6px; }
+.aplica-no  { color: #f87171; font-weight: 700; font-size: 11px; margin-bottom: 6px; }
+.aplica-body { color: #94a3b8; font-size: 12px; line-height: 1.6; }
+.vt { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
+.vt th { background: #0f172a; color: #64748b; padding: 4px 8px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.vt td { padding: 5px 8px; border-top: 1px solid #1a2535; font-size: 11px; }
+.vt tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.ok   { color: #4ade80; font-weight: 700; }
+.fail { color: #f87171; font-weight: 700; }
+.warn { color: #fbbf24; font-weight: 700; }
+.na   { color: #94a3b8; font-weight: 700; }
+</style>
+</head>
+<body>
+<header>
+  <h1>// ASVS 5.0 — L1 &nbsp;·&nbsp; Bitácora Plantilla</h1>
+  <p>Solo V1 por ahora · Stepper en Aplica + Pasos</p>
+</header>
+<div class="toolbar">
+  <button class="btn-reset" onclick="resetAll()">⟳ Reset — todo a Pendiente</button>
+  <span>Restablece todos los estados al valor inicial</span>
+</div>
+<div class="wrap">
+<table>
+<thead>
+<tr>
+  <th style="width:90px">Requisito</th>
+  <th style="width:220px">Descripción</th>
+  <th style="width:130px">Estado</th>
+  <th style="width:220px">Cuándo aplica</th>
+  <th>Pasos para identificar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="chapter"><td colspan="5"><b>V1: Codificación y Saneamiento</b></td></tr>
+<tr class="section"><td colspan="5">V1.2 · Prevención de Inyección</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V1.2.1</span></td>
+  <td style="color:#94a3b8;font-size:12px;line-height:1.5;">Verificar que la codificación de salida para respuestas HTTP, HTML o XML es apropiada para el contexto.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-121" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-121">
+  <div class="st-header">
+    <span class="st-title" id="ap-121-title">Hoja 1 de 2</span>
+    <span class="st-name">V1.2.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-121-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-121')" id="ap-121-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-121-dot-0"></div><div class="dot" id="ap-121-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-121')" id="ap-121-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-121">
+  <div class="st-header">
+    <span class="st-title" id="st-121-title">Hoja 1 de 3</span>
+    <span class="st-name">V1.2.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-121-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-121')" id="st-121-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-121-dot-0"></div><div class="dot" id="st-121-dot-1"></div><div class="dot" id="st-121-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-121')" id="st-121-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V1.2.2</span></td>
+  <td style="color:#94a3b8;font-size:12px;line-height:1.5;">Verificar que cuando se construyen URLs dinámicamente con datos del usuario, estos van correctamente codificados. Solo se permiten protocolos seguros.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-122" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-122">
+  <div class="st-header">
+    <span class="st-title" id="ap-122-title">Hoja 1 de 2</span>
+    <span class="st-name">V1.2.2 aplica</span>
+  </div>
+  <div class="st-body" id="ap-122-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-122')" id="ap-122-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-122-dot-0"></div><div class="dot" id="ap-122-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-122')" id="ap-122-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-122">
+  <div class="st-header">
+    <span class="st-title" id="st-122-title">Hoja 1 de 3</span>
+    <span class="st-name">V1.2.2 pasos</span>
+  </div>
+  <div class="st-body" id="st-122-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-122')" id="st-122-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-122-dot-0"></div><div class="dot" id="st-122-dot-1"></div><div class="dot" id="st-122-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-122')" id="st-122-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V1.2.3</span></td>
+  <td style="color:#94a3b8;font-size:12px;line-height:1.5;">Verificar que se usa codificación de salida al construir dinámicamente contenido JavaScript (incluido JSON), para evitar inyección JS/JSON.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-123" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-123">
+  <div class="st-header">
+    <span class="st-title" id="ap-123-title">Hoja 1 de 2</span>
+    <span class="st-name">V1.2.3 aplica</span>
+  </div>
+  <div class="st-body" id="ap-123-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-123')" id="ap-123-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-123-dot-0"></div><div class="dot" id="ap-123-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-123')" id="ap-123-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-123">
+  <div class="st-header">
+    <span class="st-title" id="st-123-title">Hoja 1 de 3</span>
+    <span class="st-name">V1.2.3 pasos</span>
+  </div>
+  <div class="st-body" id="st-123-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-123')" id="st-123-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-123-dot-0"></div><div class="dot" id="st-123-dot-1"></div><div class="dot" id="st-123-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-123')" id="st-123-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V1.2.4</span></td>
+  <td style="color:#94a3b8;font-size:12px;line-height:1.5;">Verificar que las consultas a bases de datos usan consultas parametrizadas, ORM o frameworks que protejan contra inyección SQL.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-124" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-124">
+  <div class="st-header">
+    <span class="st-title" id="ap-124-title">Hoja 1 de 2</span>
+    <span class="st-name">V1.2.4 aplica</span>
+  </div>
+  <div class="st-body" id="ap-124-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-124')" id="ap-124-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-124-dot-0"></div><div class="dot" id="ap-124-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-124')" id="ap-124-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-124">
+  <div class="st-header">
+    <span class="st-title" id="st-124-title">Hoja 1 de 3</span>
+    <span class="st-name">V1.2.4 pasos</span>
+  </div>
+  <div class="st-body" id="st-124-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-124')" id="st-124-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-124-dot-0"></div><div class="dot" id="st-124-dot-1"></div><div class="dot" id="st-124-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-124')" id="st-124-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V1.2.5</span></td>
+  <td style="color:#94a3b8;font-size:12px;line-height:1.5;">Verificar que la app protege contra inyección de comandos del sistema operativo.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-125" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-125">
+  <div class="st-header">
+    <span class="st-title" id="ap-125-title">Hoja 1 de 2</span>
+    <span class="st-name">V1.2.5 aplica</span>
+  </div>
+  <div class="st-body" id="ap-125-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-125')" id="ap-125-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-125-dot-0"></div><div class="dot" id="ap-125-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-125')" id="ap-125-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-125">
+  <div class="st-header">
+    <span class="st-title" id="st-125-title">Hoja 1 de 3</span>
+    <span class="st-name">V1.2.5 pasos</span>
+  </div>
+  <div class="st-body" id="st-125-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-125')" id="st-125-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-125-dot-0"></div><div class="dot" id="st-125-dot-1"></div><div class="dot" id="st-125-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-125')" id="st-125-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="section"><td colspan="5">V1.3 · Saneamiento</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V1.3.1</span></td>
+  <td style="color:#94a3b8;font-size:12px;line-height:1.5;">Verificar que toda entrada HTML no fiable procedente de editores WYSIWYG es saneada usando una librería reconocida.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-131" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-131">
+  <div class="st-header">
+    <span class="st-title" id="ap-131-title">Hoja 1 de 2</span>
+    <span class="st-name">V1.3.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-131-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-131')" id="ap-131-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-131-dot-0"></div><div class="dot" id="ap-131-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-131')" id="ap-131-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-131">
+  <div class="st-header">
+    <span class="st-title" id="st-131-title">Hoja 1 de 3</span>
+    <span class="st-name">V1.3.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-131-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-131')" id="st-131-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-131-dot-0"></div><div class="dot" id="st-131-dot-1"></div><div class="dot" id="st-131-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-131')" id="st-131-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V1.3.2</span></td>
+  <td style="color:#94a3b8;font-size:12px;line-height:1.5;">Verificar que la app evita el uso de eval() y ejecución dinámica de código con datos del usuario (SSTI).</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-132" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-132">
+  <div class="st-header">
+    <span class="st-title" id="ap-132-title">Hoja 1 de 2</span>
+    <span class="st-name">V1.3.2 aplica</span>
+  </div>
+  <div class="st-body" id="ap-132-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-132')" id="ap-132-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-132-dot-0"></div><div class="dot" id="ap-132-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-132')" id="ap-132-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-132">
+  <div class="st-header">
+    <span class="st-title" id="st-132-title">Hoja 1 de 3</span>
+    <span class="st-name">V1.3.2 pasos</span>
+  </div>
+  <div class="st-body" id="st-132-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-132')" id="st-132-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-132-dot-0"></div><div class="dot" id="st-132-dot-1"></div><div class="dot" id="st-132-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-132')" id="st-132-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="section"><td colspan="5">V1.5 · Deserialización Segura</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V1.5.1</span></td>
+  <td style="color:#94a3b8;font-size:12px;line-height:1.5;">Verificar que los analizadores XML tienen deshabilitada la resolución de entidades externas (XXE).</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-151" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-151">
+  <div class="st-header">
+    <span class="st-title" id="ap-151-title">Hoja 1 de 2</span>
+    <span class="st-name">V1.5.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-151-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-151')" id="ap-151-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-151-dot-0"></div><div class="dot" id="ap-151-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-151')" id="ap-151-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-151">
+  <div class="st-header">
+    <span class="st-title" id="st-151-title">Hoja 1 de 3</span>
+    <span class="st-name">V1.5.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-151-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-151')" id="st-151-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-151-dot-0"></div><div class="dot" id="st-151-dot-1"></div><div class="dot" id="st-151-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-151')" id="st-151-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr></tbody></table></div>
+<tr class="chapter"><td colspan="5"><b>V2: Validación y Lógica de Negocio</b></td></tr>
+<tr class="section"><td colspan="5">V2.1 · Documentación de Validación</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V2.1.1</span></td>
+  <td class="desc-cell">Verificar que la documentación define reglas de validación de entrada: formatos esperados, rangos permitidos y estructuras de datos aceptadas.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-211" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-211">
+  <div class="st-header">
+    <span class="st-title" id="ap-211-title">Hoja 1 de 2</span>
+    <span class="st-name">V2.1.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-211-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-211')" id="ap-211-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-211-dot-0"></div><div class="dot" id="ap-211-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-211')" id="ap-211-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-211">
+  <div class="st-header">
+    <span class="st-title" id="st-211-title">Hoja 1 de 3</span>
+    <span class="st-name">V2.1.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-211-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-211')" id="st-211-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-211-dot-0"></div><div class="dot" id="st-211-dot-1"></div><div class="dot" id="st-211-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-211')" id="st-211-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="section"><td colspan="5">V2.2 · Validación de Entrada</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V2.2.1</span></td>
+  <td class="desc-cell">Verificar que la entrada es validada contra listas de valores permitidos, patrones y rangos lógicos predefinidos.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-221" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-221">
+  <div class="st-header">
+    <span class="st-title" id="ap-221-title">Hoja 1 de 2</span>
+    <span class="st-name">V2.2.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-221-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-221')" id="ap-221-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-221-dot-0"></div><div class="dot" id="ap-221-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-221')" id="ap-221-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-221">
+  <div class="st-header">
+    <span class="st-title" id="st-221-title">Hoja 1 de 3</span>
+    <span class="st-name">V2.2.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-221-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-221')" id="st-221-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-221-dot-0"></div><div class="dot" id="st-221-dot-1"></div><div class="dot" id="st-221-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-221')" id="st-221-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V2.2.2</span></td>
+  <td class="desc-cell">Verificar que la validación de entrada se aplica en el servidor, no solo en el cliente (frontend).</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-222" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-222">
+  <div class="st-header">
+    <span class="st-title" id="ap-222-title">Hoja 1 de 2</span>
+    <span class="st-name">V2.2.2 aplica</span>
+  </div>
+  <div class="st-body" id="ap-222-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-222')" id="ap-222-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-222-dot-0"></div><div class="dot" id="ap-222-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-222')" id="ap-222-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-222">
+  <div class="st-header">
+    <span class="st-title" id="st-222-title">Hoja 1 de 3</span>
+    <span class="st-name">V2.2.2 pasos</span>
+  </div>
+  <div class="st-body" id="st-222-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-222')" id="st-222-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-222-dot-0"></div><div class="dot" id="st-222-dot-1"></div><div class="dot" id="st-222-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-222')" id="st-222-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr><tr class="section"><td colspan="5">V2.3 · Seguridad de la Lógica de Negocio</td></tr>
+<tr class="data-row">
+  <td style="text-align:center;vertical-align:middle;"><span class="badge">V2.3.1</span></td>
+  <td class="desc-cell">Verificar que la app solo procesa los flujos de lógica de negocio en el orden esperado y sin saltarse pasos.</td>
+  <td style="text-align:center;vertical-align:middle;"><select id="sel-st-231" class="status-sel" onchange="updSel(this)"><option value="pendiente" selected>⏳ Pendiente</option><option value="correcto">✅ Correcto</option><option value="deficiente">❌ Deficiente</option><option value="noapl">➖ No aplica</option></select></td>
+  <td><div class="stepper" id="ap-231">
+  <div class="st-header">
+    <span class="st-title" id="ap-231-title">Hoja 1 de 2</span>
+    <span class="st-name">V2.3.1 aplica</span>
+  </div>
+  <div class="st-body" id="ap-231-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('ap-231')" id="ap-231-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="ap-231-dot-0"></div><div class="dot" id="ap-231-dot-1"></div></div>
+    <button class="st-btn" onclick="sN('ap-231')" id="ap-231-next">Sig ▶</button>
+  </div>
+</div></td>
+  <td><div class="stepper" id="st-231">
+  <div class="st-header">
+    <span class="st-title" id="st-231-title">Hoja 1 de 3</span>
+    <span class="st-name">V2.3.1 pasos</span>
+  </div>
+  <div class="st-body" id="st-231-body"></div>
+  <div class="st-footer">
+    <button class="st-btn" onclick="sP('st-231')" id="st-231-prev" disabled>◀ Ant</button>
+    <div class="dots"><div class="dot active" id="st-231-dot-0"></div><div class="dot" id="st-231-dot-1"></div><div class="dot" id="st-231-dot-2"></div></div>
+    <button class="st-btn" onclick="sN('st-231')" id="st-231-next">Sig ▶</button>
+  </div>
+</div></td>
+</tr></tbody></table></div>
+<script>
+const AD = {"ap-121": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app genera HTML, XML o cabeceras HTTP en el servidor usando datos del usuario o de la BD. Por ejemplo: un backend en Java, PHP o Python que construye el HTML de la página antes de enviarlo, insertando el nombre del usuario dentro de etiquetas HTML. Si el servidor genera la página, este riesgo existe.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app es una SPA pura (Angular, React, Vue) donde el servidor solo devuelve JSON limpio, y es el navegador quien construye el HTML. El servidor nunca genera HTML con datos del usuario incrustados, por lo que este vector no existe en el backend.</div>"], "ap-122": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene alguna funcionalidad donde el valor que escribe o selecciona el usuario acaba formando parte de una URL visible. Ejemplos: un campo de búsqueda que genera <code>/buscar?q=texto</code>, filtros de categoría que cambian la URL, o redirecciones que incluyen parámetros del usuario en la URL de destino.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">Todas las URLs de la app son fijas y predefinidas en el código. El usuario navega, rellena formularios y guarda datos, pero ningún valor que el usuario escriba aparece nunca dentro de la URL como parámetro. Todas las peticiones van con los datos en el body JSON, no en la URL.</div>"], "ap-123": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">El servidor genera páginas HTML que contienen bloques <code>&lt;script&gt;</code> con datos del usuario dentro. Por ejemplo el backend construye esto y lo envía: <code>var user = \"NOMBRE_DE_BD\";</code> dentro de un tag script. Si el servidor mete datos en el JavaScript de la página, aplica.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">Todo el JavaScript de la app son ficheros <code>.js</code> estáticos externos que el servidor nunca modifica. El servidor solo devuelve JSON con datos y el navegador construye la página con ellos. No hay ningún <code>&lt;script&gt;</code> con contenido generado dinámicamente por el servidor.</div>"], "ap-124": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene base de datos y los datos del usuario llegan hasta una consulta: el formulario de login busca al usuario en la BD por su email, un buscador filtra registros con un campo que el usuario escribe, un filtro de fechas genera una consulta SQL con los valores del formulario. Si el usuario escribe algo y eso llega a una consulta de BD, aplica.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app no tiene base de datos, o si la tiene, ningún dato del usuario llega a construir una consulta: todas las consultas son completamente fijas con valores hardcodeados en el código, sin ningún parámetro que provenga del usuario.</div>"], "ap-125": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app ejecuta comandos del sistema operativo en el servidor usando datos del usuario. Ejemplos: una funcionalidad de conversión de ficheros que ejecuta <code>convert imagen.jpg</code> con el nombre que subió el usuario, un campo de ping que ejecuta <code>ping [IP_del_usuario]</code>, o cualquier llamada a <code>exec()</code>, <code>system()</code> o similares con datos del usuario.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app nunca ejecuta comandos del sistema operativo, o si los ejecuta son completamente fijos y no incluyen ningún dato que provenga del usuario. Una app CRUD típica que solo lee y escribe en BD generalmente no ejecuta comandos del SO.</div>"], "ap-131": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene campos que renderizan HTML: editores tipo TinyMCE, CKEditor, Quill, campos de descripción con formato enriquecido (negrita, cursiva, enlaces). Si el usuario puede escribir HTML formateado y la app lo muestra como HTML renderizado en lugar de texto plano, aplica.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">Todos los campos de texto de la app muestran el contenido como texto plano. Si escribes <code>&lt;b&gt;hola&lt;/b&gt;</code> en un campo y la app lo muestra literalmente como ese texto (no como texto en negrita), no renderiza HTML y este check no aplica.</div>"], "ap-132": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app usa motores de plantillas en el servidor (Twig, Jinja2, Smarty, Freemarker, Thymeleaf...) o funciones como <code>eval()</code> con datos del usuario. Si hay algún campo cuyo valor el servidor calcula o interpreta en lugar de mostrarlo directamente, o si la app permite plantillas personalizables, aplica.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">Toda la lógica del servidor está hardcodeada. No hay ningún punto donde el servidor evalúe o interprete expresiones escritas por el usuario. Los campos de texto solo almacenan y muestran texto, nunca lo ejecutan ni lo evalúan.</div>"], "ap-151": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app procesa XML en algún momento: importación de ficheros <code>.xml</code>, feeds RSS/Atom, mensajes SOAP, integración con sistemas legacy, cualquier endpoint que reciba o genere XML. Si en Burp ves peticiones con <code>Content-Type: application/xml</code> o cuerpos que empiezan por <code>&lt;?xml</code>, aplica.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">Todo el intercambio de datos de la app se hace con JSON, formularios HTML multipart o datos binarios. No hay ningún punto en la app donde se procese o parsee XML. Si navegando por toda la app en Burp no ves ninguna petición ni respuesta con XML, no aplica.</div>"]};
+const PD = {"st-121": ["<strong>Paso 1 — Identifica si el servidor genera HTML</strong><br><br>Con Burp activo, navega por la app y mira las respuestas en <strong>Proxy → HTTP History</strong>. Haz clic en las respuestas y en la pestaña <strong>Response</strong> fíjate en la cabecera <code>Content-Type</code>.<br><br>Si ves respuestas con <code>Content-Type: text/html</code>, el servidor está generando HTML. Si solo ves <code>application/json</code>, es una SPA y este check no aplica.<br><br>Si el servidor genera HTML, mira el body de esas respuestas. ¿Ves tu nombre, tu ID u otros datos tuyos dentro de etiquetas HTML?", "<strong>Paso 2 — Prueba el payload en un campo editable</strong><br><br>Si el servidor genera HTML con datos tuyos, ve a un campo editable de la app (nombre de perfil, comentario, descripción) y escribe esto y guarda:<br><code>&lt;script&gt;alert(1)&lt;/script&gt;</code><br><br>Navega a la página donde aparece ese dato y vuelve a Burp. En la respuesta HTML mira cómo aparece ese valor en el código fuente.", "<table class=\"vt\"><tr><th>Lo que ves en la respuesta HTML</th><th>Veredicto</th></tr><tr><td>El servidor lo ha escapado: ves <code>&amp;lt;script&amp;gt;</code> en lugar de <code>&lt;script&gt;</code></td><td class=\"ok\">✅ Correcto</td></tr><tr><td>El servidor lo mete en crudo: ves <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> sin escapar</td><td class=\"fail\">❌ Deficiente</td></tr><tr><td>Aparece un popup de alerta en el navegador</td><td class=\"fail\">❌ Deficiente grave — XSS confirmado</td></tr><tr><td>El servidor nunca devuelve <code>text/html</code>, solo JSON</td><td class=\"na\">➖ No aplica</td></tr></table>"], "st-122": ["<strong>Paso 1 — Determina si hay URLs dinámicas con datos del usuario</strong><br><br>Navega por todas las funcionalidades de la app mirando la barra de direcciones del navegador. ¿En algún momento ves que lo que escribiste aparece en la URL? Por ejemplo, buscas \"informes\" y la URL cambia a <code>/buscar?q=informes</code>.<br><br>Si nunca ocurre → <strong>No aplica</strong>, para aquí.<br><br>Si ocurre, abre Burp con el proxy activo y repite la misma acción para capturar la petición en <strong>Proxy → HTTP History</strong>.", "<strong>Paso 2 — Introduce el payload en el campo</strong><br><br>En el campo de la app que genera esa URL, escribe exactamente este valor y envía el formulario:<br><code>javascript:alert(1)</code><br><br>Y también prueba con:<br><code>&lt;script&gt;alert(1)&lt;/script&gt;</code><br><br>Observa si la URL resultante muestra el texto codificado (<code>%3C</code> en lugar de <code>&lt;</code>) o si aparece algún popup de alerta en el navegador.", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>Caracteres especiales codificados en la URL: <code>%3C</code> en lugar de <code>&lt;</code></td><td class=\"ok\">✅ Correcto</td></tr><tr><td>El valor se inserta en crudo en la URL sin codificación</td><td class=\"fail\">❌ Deficiente</td></tr><tr><td>Aparece un popup de alerta en el navegador</td><td class=\"fail\">❌ Deficiente grave</td></tr><tr><td>No hay URLs con parámetros del usuario en la app</td><td class=\"na\">➖ No aplica</td></tr></table>"], "st-123": ["<strong>Paso 1 — Comprueba si el servidor mete datos en bloques script</strong><br><br>Con la app abierta, pulsa <strong>F12 → Inspector (o Elements)</strong>. Pulsa <strong>Ctrl+F</strong> y busca <code>&lt;script</code>.<br><br>• Si solo ves etiquetas como <code>&lt;script src=\"main.js\"&gt;&lt;/script&gt;</code> sin contenido dentro → <strong>No aplica</strong>, para aquí.<br><br>• Si ves bloques <code>&lt;script&gt;</code> con variables dentro (como <code>var user = \"Juan\"</code>), comprueba si reconoces alguno de esos valores como datos tuyos. Si es así, continúa al paso 2.", "<strong>Paso 2 — Introduce el payload en el campo que alimenta el script</strong><br><br>Localiza en la app el campo editable cuyo valor aparece dentro del <code>&lt;script&gt;</code>. Escribe exactamente esto y guarda:<br><code>&quot;; alert(1); var x=&quot;</code><br><br>Navega a la página donde se muestra ese dato. Abre F12 → Inspector → Ctrl+F y busca <code>alert</code>. ¿Está dentro de un <code>&lt;script&gt;</code>? ¿Los caracteres especiales están escapados o en crudo?", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>No aparece dentro de ningún <code>&lt;script&gt;</code>, solo como texto visible en la página</td><td class=\"na\">➖ No aplica para este campo</td></tr><tr><td>Aparece en un <code>&lt;script&gt;</code> con los caracteres escapados: <code>\\&quot;</code> en lugar de <code>&quot;</code></td><td class=\"ok\">✅ Correcto</td></tr><tr><td>Aparece en crudo dentro de un <code>&lt;script&gt;</code> tal como se escribió</td><td class=\"fail\">❌ Deficiente</td></tr><tr><td>Aparece un popup de alerta en el navegador</td><td class=\"fail\">❌ Deficiente grave — inyección JS confirmada</td></tr></table>"], "st-124": ["<strong>Paso 1 — Ve al formulario de login y escribe el payload SQL</strong><br><br>El formulario de login es el punto más habitual: el servidor hace una consulta a la BD para buscar al usuario por email o nombre de usuario.<br><br>En el campo de <strong>email o usuario</strong> escribe exactamente:<br><code>' OR '1'='1</code><br><br>En el campo de <strong>contraseña</strong> escribe cualquier cosa. Pulsa Login.<br><br>Abre <strong>F12 → Red (Network)</strong> → haz clic en la petición de login → pestaña <strong>Respuesta</strong>. ¿Aparece algún mensaje SQL como <code>syntax error</code>, <code>mysql_fetch</code>, <code>ORA-</code>, <code>pg_query</code>?", "<strong>Paso 2 — Prueba con una comilla simple en otros campos</strong><br><br>Si la app tiene campos de búsqueda, filtros por fecha o por nombre, escribe solo una comilla simple en cada uno:<br><code>'</code><br><br>Si la app devuelve un error 500 o un mensaje extraño al enviar solo una comilla, es una señal de que el apóstrofe rompe la sintaxis de la consulta SQL.<br><br>En Burp también puedes verlo: manda la petición al <strong>Repeater</strong>, cambia el valor del campo por <code>'</code> y observa si la respuesta cambia a un error 500.", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>Error 400 o 401 con mensaje genérico (\"credenciales incorrectas\") sin información de BD</td><td class=\"ok\">✅ Correcto</td></tr><tr><td>Error 500 con mensaje genérico sin detalles SQL visibles</td><td class=\"warn\">⚠️ Mejorable — el 500 debería ser 401, pero no filtra info SQL</td></tr><tr><td>Aparece mensaje de error SQL en la respuesta</td><td class=\"fail\">❌ Deficiente</td></tr><tr><td>El payload hace que la app inicie sesión sin contraseña válida</td><td class=\"fail\">❌ Deficiente grave — SQL Injection confirmada</td></tr></table>"], "st-125": ["<strong>⚠️ NO REALIZADO en esta sesión de auditoría</strong><br><br>Este check requiere identificar si la app ejecuta comandos del sistema operativo con datos del usuario.<br><br>Para probarlo: localiza en Burp cualquier campo de la app donde el servidor pueda ejecutar comandos: conversión de ficheros, utilidades de red (ping, traceroute), herramientas de diagnóstico, scripts que procesan entradas del usuario.", "<strong>Paso 2 — Introduce payloads de inyección de comandos</strong><br><br>Si localizas un campo sospechoso, prueba estos payloads uno a uno en Burp Repeater:<br><code>; ls</code><br><code>| whoami</code><br><code>&amp;&amp; id</code><br><code>` id`</code><br><br>¿Aparece en la respuesta el resultado de un comando del sistema como <code>root</code>, <code>www-data</code> o un listado de ficheros?", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>La app procesa el campo pero no devuelve ningún resultado de comando del SO</td><td class=\"ok\">✅ Correcto</td></tr><tr><td>La app devuelve en la respuesta el resultado de un comando: nombre de usuario del sistema, listado de ficheros, etc.</td><td class=\"fail\">❌ Deficiente grave — RCE confirmada</td></tr><tr><td>La app no ejecuta ningún comando del SO con datos del usuario</td><td class=\"na\">➖ No aplica</td></tr></table>"], "st-131": ["<strong>Paso 1 — Comprueba si la app renderiza HTML</strong><br><br>Busca cualquier campo de texto editable en la app: comentarios, descripciones, notas, nombre de perfil. Escribe exactamente esto en el campo y guarda:<br><code>&lt;h2&gt;hola&lt;/h2&gt;</code><br><br>Mira cómo aparece el resultado:<br>• Si ves el texto literal <code>&lt;h2&gt;hola&lt;/h2&gt;</code> → el campo NO renderiza HTML → <strong>No aplica</strong>, para aquí.<br>• Si ves un título grande que dice \"hola\" → el campo SÍ renderiza HTML → continúa al paso 2.", "<strong>Paso 2 — Prueba payloads de XSS para verificar el saneamiento</strong><br><br>Si el campo renderiza HTML, prueba si el saneamiento filtra los elementos peligrosos. Escribe cada uno por separado, guarda y observa si aparece un popup:<br><code>&lt;img src=x onerror=alert(1)&gt;</code><br><code>&lt;svg onload=alert(1)&gt;</code><br><code>&lt;script&gt;alert(1)&lt;/script&gt;</code><br><br>Si el campo tiene un editor WYSIWYG, prueba a pegar esos textos directamente en el modo código fuente del editor.", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>El campo muestra el HTML como texto plano (<code>&lt;h2&gt;hola&lt;/h2&gt;</code> visible como texto)</td><td class=\"na\">➖ No aplica — no renderiza HTML</td></tr><tr><td>Renderiza HTML básico pero elimina los atributos de eventos peligrosos (<code>onerror</code>, <code>onload</code>...)</td><td class=\"ok\">✅ Correcto — el saneamiento funciona</td></tr><tr><td>Renderiza HTML y ejecuta los payloads → aparece popup de alerta</td><td class=\"fail\">❌ Deficiente — XSS mediante HTML no saneado</td></tr></table>"], "st-132": ["<strong>Paso 1 — Introduce el payload de detección SSTI</strong><br><br>Busca cualquier campo de texto editable en la app: comentarios, nombre de perfil, descripciones. Escribe exactamente esto y guarda:<br><code>{{7*7}}</code><br><br>Esta expresión es el payload estándar para detectar SSTI (Server-Side Template Injection). Si el servidor usa un motor de plantillas vulnerable, evaluará <code>7*7</code> y devolverá <code>49</code> en lugar del texto literal.<br><br>Mira cómo aparece el valor en la app después de guardarlo.", "<strong>Paso 2 — Prueba variantes para otros motores de plantillas</strong><br><br>Si <code>{{7*7}}</code> no lo evalúa, prueba estas variantes para otros motores:<br><code>${{7*7}}</code> → Freemarker / Pebble<br><code>#{7*7}</code> → Ruby ERB / Slim<br><code>*{7*7}</code> → Thymeleaf<br><br>Escribe cada una por separado y mira si alguna devuelve <code>49</code> en lugar del texto literal.", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>Se muestra literalmente <code>{{7*7}}</code> tal como se escribió</td><td class=\"ok\">✅ Correcto — el servidor no evalúa expresiones</td></tr><tr><td>Se muestra el número <code>49</code> (el servidor ejecutó la multiplicación)</td><td class=\"fail\">❌ Deficiente grave — SSTI confirmado</td></tr></table>"], "st-151": ["<strong>Paso 1 — Determina si la app procesa XML</strong><br><br>Con Burp activo, navega por todas las funcionalidades de la app. En <strong>Proxy → HTTP History</strong> busca peticiones con <code>Content-Type: application/xml</code> o <code>text/xml</code>, o cuyo body empiece por <code>&lt;?xml</code>.<br><br>Prueba especialmente funcionalidades de importación, subida de ficheros o integraciones con sistemas externos.<br><br>Si no encuentras ninguna petición con XML → <strong>No aplica</strong>, para aquí.", "<strong>Paso 2 — Envía el payload XXE con Burp Repeater</strong><br><br>Una vez localizado el endpoint que recibe XML, mándalo al <strong>Repeater</strong>. Reemplaza el body XML por este payload:<br><code>&lt;?xml version=\"1.0\"?&gt;<br>&lt;!DOCTYPE foo [&lt;!ENTITY xxe SYSTEM \"file:///etc/passwd\"&gt;]&gt;<br>&lt;foo&gt;&amp;xxe;&lt;/foo&gt;</code><br><br>Pulsa Send y observa la respuesta. ¿Aparece en la respuesta el contenido de ficheros internos del servidor?", "<table class=\"vt\"><tr><th>Lo que ves en la respuesta</th><th>Veredicto</th></tr><tr><td>Error controlado o mensaje genérico, sin ningún contenido de ficheros del servidor</td><td class=\"ok\">✅ Correcto — XXE deshabilitado</td></tr><tr><td>La respuesta contiene líneas de <code>/etc/passwd</code> u otro fichero interno</td><td class=\"fail\">❌ Deficiente grave — XXE confirmado</td></tr><tr><td>La app no procesa XML en ningún punto</td><td class=\"na\">➖ No aplica</td></tr></table>"]};
+const AD2 = {"ap-211": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene documentación técnica interna (un documento de diseño, un wiki, una especificación funcional) que describa cómo funciona el sistema. Si existe ese material, debería definir también las reglas de validación de entrada: qué formatos acepta, qué rangos son válidos, qué valores se permiten.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">No existe ningún tipo de documentación técnica interna de la aplicación, o eres un pentester externo sin acceso a ella. En ese caso no puedes verificar este requisito desde fuera y se marca como no aplicable en el contexto del test.</div>"], "ap-221": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene campos de entrada cuyo valor se usa para tomar decisiones: formularios de búsqueda, filtros, importaciones de datos, campos numéricos, fechas, selectores. Cualquier campo donde el servidor espera un formato o rango concreto y debería rechazar valores que no lo cumplan.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">La app no tiene ningún campo de entrada donde el servidor tome decisiones basadas en el valor introducido. Es prácticamente imposible en una app real, pero si todos los campos son puramente de texto libre sin ningún tipo de restricción lógica, no aplica.</div>"], "ap-222": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene campos con restricciones visibles en el frontend: fechas que no permiten valores pasados, campos numéricos con límites mínimos o máximos, campos deshabilitados para ciertos roles, estados bloqueados que la web no te deja modificar. Si el frontend restringe algo visualmente, hay que comprobar si el servidor también lo valida.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">No hay ninguna validación visible en el frontend. Todos los campos aceptan cualquier valor sin restricciones visibles. Si el frontend no restringe nada, no hay diferencia entre cliente y servidor que probar.</div>"], "ap-231": ["<div class=\"aplica-si\">✔ Aplica cuando</div><div class=\"aplica-body\">La app tiene flujos de varios pasos donde el orden o el estado importa: procesos de aprobación (el empleado imputa → el jefe aprueba), periodos cerrados que no permiten modificaciones, registros con estado \"aprobado\" que no deberían poder editarse, wizards multi-paso donde el paso 3 no debería ser posible sin el paso 2.</div>", "<div class=\"aplica-no\">✖ No aplica cuando</div><div class=\"aplica-body\">Todas las acciones de la app son completamente independientes entre sí. No hay ningún flujo de múltiples pasos donde unos dependan de otros, ningún estado que bloquee otras operaciones, y ningún periodo o registro que deba ser inmutable una vez cerrado.</div>"]};
+const PD2 = {"st-211": ["<strong>⚠️ Este check es de documentación, no de pruebas técnicas</strong><br><br>No se puede verificar desde el navegador ni desde Burp. Requiere acceso a la documentación interna del proyecto.<br><br>Si tienes acceso, busca documentos de diseño, wikis, especificaciones funcionales o manuales técnicos. Busca secciones que describan qué valores acepta la app en sus campos: formatos de fecha, rangos numéricos, longitudes máximas, valores permitidos en desplegables, etc.", "<strong>Paso 2 — Compara la documentación con el comportamiento real</strong><br><br>Si encuentras esa documentación, comprueba que lo que dice coincide con lo que hace la app. Por ejemplo, si la documentación dice \"el campo edad acepta entre 0 y 120\", prueba a enviar -1 o 999 desde Burp Repeater y verifica que el servidor lo rechaza como dice la documentación.", "<table class=\"vt\"><tr><th>Situación</th><th>Veredicto</th></tr><tr><td>Existe documentación y define reglas de validación claras para los campos de la app</td><td class=\"ok\">✅ Correcto</td></tr><tr><td>Existe documentación pero no menciona ninguna regla de validación de entrada</td><td class=\"fail\">❌ Deficiente</td></tr><tr><td>No existe documentación técnica o no tienes acceso como pentester externo</td><td class=\"na\">➖ No aplica</td></tr></table>"], "st-221": ["<strong>⚠️ NO REALIZADO en esta sesión de auditoría</strong><br><br>Este check verifica que la app valida la entrada contra listas de valores permitidos, patrones y rangos lógicos.<br><br>Para probarlo: localiza en Burp una petición con un campo cuyo valor tenga un formato esperado (una fecha, un número, un código de categoría) y mándala al <strong>Repeater</strong>. Cambia el valor por algo completamente inválido para ese campo.", "<strong>Paso 2 — Envía valores fuera de rango o con formato incorrecto</strong><br><br>En Burp Repeater, prueba a enviar valores inesperados en campos con formato conocido:<br>• En un campo de fecha: <code>99/99/9999</code> o <code>hola</code><br>• En un campo numérico de edad: <code>-500</code> o <code>99999</code><br>• En un campo de categoría con valores fijos: un valor inventado como <code>FAKE_CATEGORY</code><br><br>Observa si el servidor los rechaza con un error controlado o los acepta sin validar.", "<table class=\"vt\"><tr><th>Lo que ves</th><th>Veredicto</th></tr><tr><td>El servidor rechaza los valores inválidos con error controlado (400, 422) y un mensaje descriptivo</td><td class=\"ok\">✅ Correcto</td></tr><tr><td>El servidor acepta cualquier valor sin validar, incluso formatos completamente erróneos</td><td class=\"fail\">❌ Deficiente</td></tr></table>"], "st-222": ["<strong>Paso 1 — Identifica una restricción visible en el frontend</strong><br><br>Navega por la app buscando campos o acciones con restricciones visibles. Ejemplos:<br>• Un campo de fecha que no permite seleccionar fechas pasadas<br>• Un campo numérico con límite máximo o mínimo<br>• Un botón deshabilitado (en gris) para tu rol de usuario<br>• Un registro marcado como \"cerrado\" o \"aprobado\" que no puedes editar desde la web<br><br>Anota qué campo tiene la restricción y cuál es el valor que el frontend no te deja poner.", "<strong>Paso 2 — Captura la petición en Burp y sáltate la restricción</strong><br><br>Con Burp activo, realiza la acción normal permitida para capturar la estructura de la petición. Mándala al <strong>Repeater</strong> (clic derecho → Send to Repeater).<br><br>En el Repeater, edita el parámetro correspondiente en el body para poner el valor que el frontend no te permitía. Por ejemplo, si el frontend bloquea fechas del mes anterior, cambia en el body:<br><code>\"dia\": \"2025-01-15\"</code> → <code>\"dia\": \"2024-11-30\"</code><br><br>Pulsa Send y mira la respuesta del servidor.", "<table class=\"vt\"><tr><th>Lo que ves en la respuesta</th><th>Veredicto</th></tr><tr><td>El servidor responde con error controlado (400, 403, 422) y rechaza el valor</td><td class=\"ok\">✅ Correcto — el servidor también valida</td></tr><tr><td>El servidor responde 200 y acepta el valor que el frontend bloqueaba</td><td class=\"fail\">❌ Deficiente — solo valida en el cliente</td></tr></table>"], "st-231": ["<strong>Paso 1 — Identifica una restricción lógica en la app</strong><br><br>Navega por la app buscando flujos donde el orden o el estado importa. Ejemplos comunes:<br>• Un periodo cerrado (mes anterior) que no permite modificaciones desde la web<br>• Un registro con estado \"aprobado\" que no debería poder editarse<br>• Un proceso de varios pasos donde el paso 3 no debería ser posible sin completar el paso 2<br><br>Con Burp activo, realiza la acción en un contexto válido para capturar la estructura de la petición. Mándala al <strong>Repeater</strong>.", "<strong>Paso 2 — Modifica el parámetro que define el contexto lógico</strong><br><br>En el Repeater, edita el parámetro que define el contexto para saltarte la restricción. Por ejemplo:<br>• Cambia la fecha al periodo cerrado: <code>\"dia\": \"2024-04-30T00:00:00.000+00:00\"</code><br>• Cambia el estado: <code>\"estado\": \"aprobado\"</code> → <code>\"estado\": \"pendiente\"</code><br>• Omite un paso necesario enviando directamente la petición del paso 3 sin haber completado el paso 2<br><br>Pulsa Send y observa la respuesta.", "<table class=\"vt\"><tr><th>Lo que ves en la respuesta</th><th>Veredicto</th></tr><tr><td>El servidor rechaza la petición con error controlado (400, 403, 422)</td><td class=\"ok\">✅ Correcto — el servidor valida la lógica de negocio</td></tr><tr><td>El servidor acepta la petición y ejecuta la acción en el contexto bloqueado</td><td class=\"fail\">❌ Deficiente — el flujo de negocio puede saltarse desde el servidor</td></tr></table>"]};
+const SS = {};
+
+function initStepper(id, data) {
+  SS[id] = 0;
+  render(id, data);
+}
+
+function render(id, data) {
+  if (!data) return;
+  const idx = SS[id];
+  const total = data.length;
+  const b = document.getElementById(id + '-body');
+  const t = document.getElementById(id + '-title');
+  const p = document.getElementById(id + '-prev');
+  const n = document.getElementById(id + '-next');
+  if (!b) return;
+  b.innerHTML = data[idx];
+  t.textContent = 'Hoja ' + (idx + 1) + ' de ' + total;
+  p.disabled = (idx === 0);
+  n.disabled = (idx === total - 1);
+  for (let i = 0; i < total; i++) {
+    const d = document.getElementById(id + '-dot-' + i);
+    if (d) { d.className = 'dot' + (i === idx ? ' active' : ''); }
+  }
+}
+
+function sN(id) {
+  const data = AD[id] || PD[id];
+  if (!data) return;
+  if (SS[id] < data.length - 1) { SS[id]++; render(id, data); }
+}
+
+function sP(id) {
+  const data = AD[id] || PD[id];
+  if (!data) return;
+  if (SS[id] > 0) { SS[id]--; render(id, data); }
+}
+
+function updSel(sel) {
+  const m = {
+    pendiente: 'background:rgba(133,100,4,0.2);border-color:#ca8a04;color:#fde68a;',
+    correcto:  'background:rgba(21,128,61,0.2);border-color:#16a34a;color:#86efac;',
+    deficiente:'background:rgba(185,28,28,0.2);border-color:#dc2626;color:#fca5a5;',
+    noapl:     'background:rgba(55,65,81,0.2);border-color:#4b5563;color:#9ca3af;'
+  };
+  sel.style.cssText = m[sel.value] || '';
+}
+
+function resetAll() {
+  document.querySelectorAll('.status-sel').forEach(function(sel) {
+    sel.value = 'pendiente';
+    updSel(sel);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  Object.keys(AD).forEach(function(id) { initStepper(id, AD[id]); });
+  Object.keys(PD).forEach(function(id) { initStepper(id, PD[id]); });
+  Object.keys(AD2).forEach(function(id) { initStepper(id, AD2[id]); });
+  Object.keys(PD2).forEach(function(id) { initStepper(id, PD2[id]); });
+});
+</script>
+</body>
+</html>
